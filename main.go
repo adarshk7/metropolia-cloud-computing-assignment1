@@ -22,6 +22,7 @@ type BadRequestPayload struct {
 func ThrowDiceHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	faceCount, error := strconv.Atoi(params["faceCount"])
 	if (error != nil) {
@@ -34,7 +35,7 @@ func ThrowDiceHandler(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(BadRequestPayload{Reason: "Number cannot be negative."})
 		return
 	}
-	eyesCount := rand.Intn(faceCount - 1) + 1
+	eyesCount := rand.Intn(faceCount) + 1
 	responsePayload := DiceThrowResponsePayload{Faces: faceCount, Eyes: eyesCount}
 
 	json.NewEncoder(w).Encode(responsePayload)
